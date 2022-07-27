@@ -1,7 +1,7 @@
 default_language_version:
   python: python3.10
 
-files: app
+files: backend
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
