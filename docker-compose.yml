@@ -1,7 +1,9 @@
 version: '3.9'
 services:
   database:
-    image: postgres:14.3
+    build:
+      context: docker/postgres
+
     restart: on-failure
     volumes: 
       - ./database/data:/var/lib/postgresql/data
@@ -88,7 +90,7 @@ services:
       context: docker/nginx
       dockerfile: Dockerfile
     ports:
-      - "1337:80"
+      - "${NGINX_PORT:-1337}:80"
     depends_on:
       - backend
 
