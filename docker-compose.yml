@@ -10,8 +10,6 @@ services:
       - ./database/backups:/backups
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
-    ports:
-      - "${POSTGRES_PORT}:5432"
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -62,8 +60,6 @@ services:
   
         DIGITAL_SPB_TOKEN: ${DIGITAL_SPB_TOKEN}
         VK_CLIENT_SECRET: ${VK_CLIENT_SECRET}
-    ports:
-      - "${APP_PORT}:${APP_PORT}"
     privileged: true
 
   celery_worker:
