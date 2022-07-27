@@ -16,7 +16,7 @@ def get_application() -> FastAPI:
         title=settings.PROJECT_NAME,
         debug=settings.DEBUG,
         version=settings.VERSION,
-        description='Код Петербурга',
+        description='Free Wi-Fi',
         docs_url=f'/{settings.API_DOC_PREFIX}/docs',
         redoc_url=f'/{settings.API_DOC_PREFIX}/redoc',
         openapi_url=f'/{settings.API_DOC_PREFIX}/openapi.json',
