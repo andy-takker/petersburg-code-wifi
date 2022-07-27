@@ -1,11 +1,10 @@
 import typer
-from sqlalchemy import func
 
 from controllers.digital_spb import DigitalSpbAPI
-from database import WifiZone
-from database.engine import get_session
+from database.utils import create_parse_task
 
 app = typer.Typer()
+
 
 @app.command(name='download-wifi-zones')
 def download_wifi_zones():
@@ -14,14 +13,10 @@ def download_wifi_zones():
     digital_spb_api.save()
 
 
-@app.command(name='test')
-def test():
-    lat_x = 59.743675
-    lon_x = 30.585087
-    radius = 5
-    with get_session() as session:
-        a = session.query(WifiZone,func.calculate_distance(WifiZone.latitude, WifiZone.longitude, lat_x, lon_x).label('label')).where(func.calculate_distance(WifiZone.latitude, WifiZone.longitude, lat_x, lon_x) < radius).order_by(func.calculate_distance(WifiZone.latitude, WifiZone.longitude, lat_x, lon_x)).all()
-        print(a)
+@app.command(name='create-interval-task')
+def create_interval_task_for_update_data():
+    create_parse_task()
+
 
 if __name__ == '__main__':
     app()

@@ -1,4 +1,3 @@
-from typing import List
 
 import requests
 from loguru import logger
@@ -9,21 +8,25 @@ from config import get_settings
 from database import District, WifiZone
 from database.engine import get_session
 
+from celery_worker.celery_conf import celery as celery_app
+
 
 class DigitalSpbAPI:
-    BASE_URL = "https://spb-classif.gate.petersburg.ru/api/v2"
-    WIFI_ZONE_URL = f"{BASE_URL}/datasets/195/versions/latest/data/417"
+    BASE_URL = 'https://spb-classif.gate.petersburg.ru/api/v2'
+    WIFI_ZONE_URL = f'{BASE_URL}/datasets/195/versions/latest/data/417'
 
     def __init__(self):
         settings = get_settings()
         self.TOKEN = settings.DIGITAL_SPB_TOKEN
-        self.wifi_zones: List[WifiZoneInput] = []
+        self.wifi_zones: list[WifiZoneInput] = []
         self.districts = set()
 
     def _get(self, url: str) -> dict:
         return requests.get(
             url=url,
-            headers={'Authorization': f'Bearer {self.TOKEN}'},
+            headers={
+                'Authorization': f'Bearer {self.TOKEN}'
+            },
         ).json()
 
     def download(self):
@@ -37,7 +40,7 @@ class DigitalSpbAPI:
             else:
                 break
 
-        self.wifi_zones = parse_obj_as(List[WifiZoneInput], wifi_zones)
+        self.wifi_zones = parse_obj_as(list[WifiZoneInput], wifi_zones)
         logger.info(f'Downloaded {len(self.wifi_zones)} wifi zones')
         for wifi_zone in self.wifi_zones:
             self.districts.add(wifi_zone.district)
@@ -63,3 +66,10 @@ class DigitalSpbAPI:
 
             session.add(wz)
             session.commit()
+
+
+@celery_app.task(bind=True, name='update_database', track_started=True)
+def download_wifi_zones(self):
+    digital_spb_api = DigitalSpbAPI()
+    digital_spb_api.download()
+    digital_spb_api.save()

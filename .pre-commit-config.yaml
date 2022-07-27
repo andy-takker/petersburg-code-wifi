@@ -72,5 +72,5 @@ repos:
       - id: vulture
         args:
           - --min-confidence=100
-          - app
+          - backend
 
