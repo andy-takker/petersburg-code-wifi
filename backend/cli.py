@@ -1,7 +1,7 @@
 import typer
 
 from controllers.digital_spb import DigitalSpbAPI
-from database.utils import create_parse_task
+from db.utils import create_parse_task
 
 app = typer.Typer()
 

@@ -28,11 +28,11 @@ def get_application() -> FastAPI:
         allow_methods=['*'],
         allow_headers=['*'],
     )
-    application.add_middleware(
-        VKValidationMiddleware,
-        client_secret=settings.VK_CLIENT_SECRET,
-        debug=settings.DEBUG,
-    )
+    if settings.CHECK_SIGN:
+        application.add_middleware(
+            VKValidationMiddleware,
+            client_secret=settings.VK_CLIENT_SECRET,
+        )
     application.add_exception_handler(
         exc_class_or_status_code=HTTPException,
         handler=http_exception_handler,

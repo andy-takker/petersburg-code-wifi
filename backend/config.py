@@ -6,10 +6,11 @@ from pydantic import BaseSettings, PostgresDsn, validator, RedisDsn, Field
 
 
 class Settings(BaseSettings):
-    DEBUG: bool
+    DEBUG: bool = Field(default=False)
+    CHECK_SIGN: bool = Field(default=False)
     VERSION: str
     SERVER_NAME: str
-    PROJECT_NAME: str
+    PROJECT_NAME: str = Field(default='Wi-Fi Zone')
     ALLOWED_HOSTS: str = None
 
     POSTGRES_USER: str

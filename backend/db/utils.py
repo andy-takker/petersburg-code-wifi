@@ -1,10 +1,12 @@
 from celery_sqlalchemy_scheduler import PeriodicTask, IntervalSchedule
 from loguru import logger
 
-from database.engine import get_session
+from db.connection.session import get_session
 
 
 def create_parse_task():
+    session = get_session()
+    session
     with get_session() as session:
         periodic_task = session.query(PeriodicTask).filter_by(
             task='update_database').first()

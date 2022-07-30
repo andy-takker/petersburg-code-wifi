@@ -6,8 +6,8 @@ services:
 
     restart: on-failure
     volumes: 
-      - ./database/data:/var/lib/postgresql/data
-      - ./database/backups:/backups
+      - ./db/data:/var/lib/postgresql/data
+      - ./db/backups:/backups
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     environment:
@@ -46,7 +46,7 @@ services:
         VERSION: ${VERSION}
         APP_PORT: ${APP_PORT}
   
-        POSTGRES_HOST: database
+        POSTGRES_HOST: db
         POSTGRES_PORT: ${POSTGRES_PORT}
         POSTGRES_DB: ${POSTGRES_DB}
         POSTGRES_USER: ${POSTGRES_USER}

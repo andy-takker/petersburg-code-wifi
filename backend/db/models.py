@@ -1,8 +1,8 @@
 from sqlalchemy import Column, String, Integer, Float, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 
-from database.base import Base
-from database.mixins import TimestampMixin
+from db.base import Base
+from db.mixins import TimestampMixin
 
 
 class District(Base):

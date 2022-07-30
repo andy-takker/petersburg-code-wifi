@@ -5,8 +5,8 @@ from pydantic import parse_obj_as
 
 from api.schemas import WifiZoneInput
 from config import get_settings
-from database import District, WifiZone
-from database.engine import get_session
+from db import District, WifiZone
+from db.connection.session import get_session
 
 from celery_worker.celery_conf import celery as celery_app
 
