@@ -84,7 +84,7 @@ services:
       context: docker/nginx
       dockerfile: Dockerfile
     ports:
-      - "${NGINX_PORT:-1337}:443"
+      - "${NGINX_PORT:-443}:443"
     depends_on:
       - backend
     volumes:
