@@ -6,7 +6,7 @@ from pydantic import parse_obj_as
 from api.schemas import WifiZoneInput
 from config import get_settings
 from db import District, WifiZone
-from db.connection.session import get_session
+from db.connection.session import get_session, SessionManager
 
 from celery_worker.celery_conf import celery as celery_app
 
@@ -17,6 +17,7 @@ class DigitalSpbAPI:
 
     def __init__(self):
         settings = get_settings()
+        self.session_manager = SessionManager()
         self.TOKEN = settings.DIGITAL_SPB_TOKEN
         self.wifi_zones: list[WifiZoneInput] = []
         self.districts = set()
@@ -48,24 +49,24 @@ class DigitalSpbAPI:
         logger.info(f'Districts {self.districts}')
 
     def save(self):
-        with get_session() as session:
-            for district in self.districts:
-                d = session.query(District).filter_by(name=district).first()
-                if d is None:
-                    session.add(District(name=district))
-            session.commit()
+        session = self.session_manager.get_session()
+        for district in self.districts:
+            d = session.query(District).filter_by(name=district).first()
+            if d is None:
+                session.add(District(name=district))
+        session.commit()
 
-            for wifi_zone in self.wifi_zones:
-                wz = session.get(WifiZone, wifi_zone.id)
-                if wz is None:
-                    wz = WifiZone()
-                wz.update_from_dict(**wifi_zone.dict(
-                    exclude={'district', 'status', 'coordinates'}))
-                wz.district = session.query(District).filter_by(
-                    name=wifi_zone.district).first()
-
+        for wifi_zone in self.wifi_zones:
+            wz = session.get(WifiZone, wifi_zone.id)
+            if wz is None:
+                wz = WifiZone()
+            wz.update_from_dict(**wifi_zone.dict(
+                exclude={'district', 'status', 'coordinates'}))
+            wz.district = session.query(District).filter_by(
+                name=wifi_zone.district).first()
             session.add(wz)
-            session.commit()
+        session.commit()
+        session.close()
 
 
 @celery_app.task(bind=True, name='update_database', track_started=True)

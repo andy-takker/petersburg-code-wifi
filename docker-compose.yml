@@ -6,8 +6,8 @@ services:
 
     restart: on-failure
     volumes: 
-      - ./db/data:/var/lib/postgresql/data
-      - ./db/backups:/backups
+      - ./database/data:/var/lib/postgresql/data
+      - ./database/backups:/backups
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     environment:
@@ -15,7 +15,8 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_PORT: ${POSTGRES_PORT}
-
+    ports:
+      - "5432:5432"
   redis:
     image: redis
     restart: on-failure
@@ -46,7 +47,7 @@ services:
         VERSION: ${VERSION}
         APP_PORT: ${APP_PORT}
   
-        POSTGRES_HOST: db
+        POSTGRES_HOST: database
         POSTGRES_PORT: ${POSTGRES_PORT}
         POSTGRES_DB: ${POSTGRES_DB}
         POSTGRES_USER: ${POSTGRES_USER}
@@ -89,7 +90,6 @@ services:
       - backend
     volumes:
       - ./docker/nginx/ssl/:/etc/nginx/ssl:ro
-
 
 volumes:
   redis_data:
