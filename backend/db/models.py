@@ -26,4 +26,5 @@ class WifiZone(TimestampMixin, Base):
     longitude = Column(Float, nullable=False, index=True)
     latitude = Column(Float, nullable=False, index=True)
 
-    district: District | None = relationship('District', back_populates='wifi_zones')
+    district: District | None = relationship('District',
+                                             back_populates='wifi_zones')

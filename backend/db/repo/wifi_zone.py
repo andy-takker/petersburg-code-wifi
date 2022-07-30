@@ -21,13 +21,13 @@ class WifiZoneRepo:
             params=Params(limit=limit, offset=offset),
         )
 
-    def get_nearest_wifi_zones(self, limit: int, offset: int,
-                               lat_x: float, lon_x: float, radius: float):
+    def get_nearest_wifi_zones(self, limit: int, offset: int, lat_x: float,
+                               lon_x: float, radius: float):
         f = func.calculate_distance(WifiZone.latitude, WifiZone.longitude,
                                     lat_x, lon_x)
         query = select(WifiZone, f.label('distance')).options(
-            selectinload(WifiZone.district)).where(
-            f < radius).order_by('distance')
+            selectinload(
+                WifiZone.district)).where(f < radius).order_by('distance')
         result = paginate(
             self.session,
             query=query,

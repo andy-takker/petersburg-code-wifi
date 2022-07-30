@@ -1,6 +1,6 @@
 import os
 from functools import lru_cache
-from typing import Optional, Dict, Any
+from typing import Any, Optional
 
 from pydantic import BaseSettings, PostgresDsn, validator, RedisDsn, Field
 
@@ -22,7 +22,7 @@ class Settings(BaseSettings):
 
     @validator('SQLALCHEMY_DATABASE_URI', pre=True)
     def assemble_db_connection(cls, v: Optional[str],
-                               values: Dict[str, Any]) -> Any:
+                               values: dict[str, Any]) -> Any:
         if isinstance(v, str):
             return v
         return PostgresDsn.build(
@@ -44,8 +44,8 @@ class Settings(BaseSettings):
     REDIS_URI: Optional[RedisDsn] = None
 
     @validator('REDIS_URI', pre=True)
-    def assemble_redis_uri(cls, v: Optional[str],
-                           values: Dict[str, Any]) -> Any:
+    def assemble_redis_uri(cls, v: Optional[str], values: dict[str,
+                                                               Any]) -> Any:
         if isinstance(v, str):
             return v
         return RedisDsn.build(
@@ -53,13 +53,14 @@ class Settings(BaseSettings):
             host=values.get('REDIS_HOST'),
             port=values.get('REDIS_PORT'),
             password=values.get('REDIS_PASSWORD'),
-            path="/1",
+            path='/1',
         )
 
     CELERY_DBURI: Optional[PostgresDsn] = None
 
     @validator('CELERY_DBURI', pre=True)
-    def assemble_celery_dburi(cls, v: Optional[str], values: [str, Any]) -> Any:
+    def assemble_celery_dburi(cls, v: Optional[str], values: [str,
+                                                              Any]) -> Any:
         if isinstance(v, str):
             return v
         return PostgresDsn.build(
@@ -72,8 +73,7 @@ class Settings(BaseSettings):
         )
 
 
-@lru_cache()
+@lru_cache
 def get_settings():
     env_file = os.getenv('ENV_FILE', '../.env')
     return Settings(_env_file=env_file)
-

@@ -1,4 +1,3 @@
-
 import requests
 from loguru import logger
 from pydantic import parse_obj_as
@@ -6,7 +5,7 @@ from pydantic import parse_obj_as
 from api.schemas import WifiZoneInput
 from config import get_settings
 from db import District, WifiZone
-from db.connection.session import get_session, SessionManager
+from db.connection.session import SessionManager
 
 from celery_worker.celery_conf import celery as celery_app
 

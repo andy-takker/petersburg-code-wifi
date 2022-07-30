@@ -5,7 +5,6 @@ from config import get_settings
 
 settings = get_settings()
 
-
 engine = create_engine(
     url=settings.CELERY_DBURI,
     pool_pre_ping=True,

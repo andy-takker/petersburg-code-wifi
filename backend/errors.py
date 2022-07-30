@@ -3,6 +3,7 @@ from loguru import logger
 from pydantic import BaseModel
 from starlette.responses import JSONResponse
 
+
 class ErrorResult(BaseModel):
     code: int
     message: str

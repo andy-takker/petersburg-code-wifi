@@ -5,6 +5,7 @@ from config import get_settings
 
 
 class SessionManager:
+
     def __init__(self) -> None:
         self.engine = create_engine(
             get_settings().CELERY_DBURI,
@@ -16,9 +17,9 @@ class SessionManager:
             bind=self.engine,
         )
 
-    def __new__(cls, *args, **kwargs):
-        if not hasattr(cls, "instance"):
-            cls.instance = super(SessionManager, cls).__new__(cls)
+    def __new__(cls):
+        if not hasattr(cls, 'instance'):
+            cls.instance = super().__new__(cls)
         return cls.instance
 
     def get_session(self) -> Session:
