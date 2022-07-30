@@ -32,7 +32,6 @@ def get_application() -> FastAPI:
         VKValidationMiddleware,
         client_secret=settings.VK_CLIENT_SECRET,
         debug=settings.DEBUG,
-        api_doc_prefix=settings.API_DOC_PREFIX,
     )
     application.add_exception_handler(
         exc_class_or_status_code=HTTPException,
