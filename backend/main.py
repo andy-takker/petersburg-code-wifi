@@ -17,9 +17,9 @@ def get_application() -> FastAPI:
         debug=settings.DEBUG,
         version=settings.VERSION,
         description='Free Wi-Fi',
-        docs_url=f'/{settings.API_DOC_PREFIX}/docs',
-        redoc_url=f'/{settings.API_DOC_PREFIX}/redoc',
-        openapi_url=f'/{settings.API_DOC_PREFIX}/openapi.json',
+        docs_url=f'/docs/swagger',
+        redoc_url=f'/docs/redoc',
+        openapi_url=f'/docs/openapi.json',
     )
     application.add_middleware(
         CORSMiddleware,

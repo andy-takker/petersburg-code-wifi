@@ -10,7 +10,6 @@ class Settings(BaseSettings):
     VERSION: str
     SERVER_NAME: str
     PROJECT_NAME: str
-    API_DOC_PREFIX: str = Field(default='api')
     ALLOWED_HOSTS: str = None
 
     POSTGRES_USER: str
