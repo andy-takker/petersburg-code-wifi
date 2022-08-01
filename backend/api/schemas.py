@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import Field, validator, BaseModel
 
@@ -10,20 +10,20 @@ class WifiZoneInput(BaseModel):
     name_wifi: str
     coverage: int
     status: str
-    coordinates: List[float]
+    coordinates: list[float]
     longitude: Optional[float]
     latitude: Optional[float]
     is_working: Optional[bool]
 
-    @validator("latitude", always=True)
+    @validator('latitude', always=True)
     def validate_latitude(cls, value, values):
         return values['coordinates'][0]
 
-    @validator("longitude", always=True)
+    @validator('longitude', always=True)
     def validate_longitude(cls, value, values):
         return values['coordinates'][1]
 
-    @validator("is_working", always=True)
+    @validator('is_working', always=True)
     def validate_is_working(cls, value, values):
         if values['status'].lower() == 'работает':
             return True

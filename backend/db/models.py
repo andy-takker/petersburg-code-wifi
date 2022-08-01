@@ -1,8 +1,8 @@
 from sqlalchemy import Column, String, Integer, Float, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 
-from database.base import Base
-from database.mixins import TimestampMixin
+from db.base import Base
+from db.mixins import TimestampMixin
 
 
 class District(Base):
@@ -26,4 +26,5 @@ class WifiZone(TimestampMixin, Base):
     longitude = Column(Float, nullable=False, index=True)
     latitude = Column(Float, nullable=False, index=True)
 
-    district: District | None = relationship('District', back_populates='wifi_zones')
+    district: District | None = relationship('District',
+                                             back_populates='wifi_zones')

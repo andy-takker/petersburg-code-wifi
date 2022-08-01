@@ -15,7 +15,8 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_PORT: ${POSTGRES_PORT}
-
+    ports:
+      - "5432:5432"
   redis:
     image: redis
     restart: on-failure
@@ -84,10 +85,11 @@ services:
       context: docker/nginx
       dockerfile: Dockerfile
     ports:
-      - "${NGINX_PORT:-1337}:80"
+      - "${NGINX_PORT:-443}:443"
     depends_on:
       - backend
-
+    volumes:
+      - ./docker/nginx/ssl/:/etc/nginx/ssl:ro
 
 volumes:
   redis_data:

@@ -13,29 +13,27 @@ from starlette.types import ASGIApp
 
 class VKValidationMiddleware(BaseHTTPMiddleware):
 
-    def __init__(self, app: ASGIApp, client_secret: str,  api_doc_prefix: str, debug: bool = True):
+    def __init__(self, app: ASGIApp, client_secret: str, debug: bool = True):
         super().__init__(app)
         self.app = app
         self.client_secret = client_secret
         self.debug = debug
-        self.api_doc_prefix = api_doc_prefix
 
-    async def dispatch(
-            self, request: Request, call_next: RequestResponseEndpoint
-    ) -> Response:
-        is_doc = request.url.path.split('/')[1] == self.api_doc_prefix
+    async def dispatch(self, request: Request,
+                       call_next: RequestResponseEndpoint) -> Response:
+        is_doc = request.url.path.split('/')[1] == 'docs'
         if is_doc or self.debug or self.is_valid(request=request):
             return await call_next(request)
-        return JSONResponse(status_code=403, content={'reason': 'Unauthorized!'})
+        return JSONResponse(status_code=403,
+                            content={'reason': 'Unauthorized!'})
 
     def is_valid(self, request: Request) -> bool:
-        vk_subset = OrderedDict(sorted(x for x in request.items()
-                                       if x[0][:3] == 'vk_'))
-        hash_code = b64encode(HMAC(
-            key=self.client_secret.encode(),
-            msg=urlencode(vk_subset, doseq=True).encode(),
-            digestmod=sha256
-        ).digest())
+        vk_subset = OrderedDict(
+            sorted(x for x in request.items() if x[0][:3] == 'vk_'))
+        hash_code = b64encode(
+            HMAC(key=self.client_secret.encode(),
+                 msg=urlencode(vk_subset, doseq=True).encode(),
+                 digestmod=sha256).digest())
         decoded_hash_code = hash_code.decode('utf-8')[:-1] \
             .replace('+', '-') \
             .replace('/', '_')

@@ -17,9 +17,9 @@ def get_application() -> FastAPI:
         debug=settings.DEBUG,
         version=settings.VERSION,
         description='Free Wi-Fi',
-        docs_url=f'/{settings.API_DOC_PREFIX}/docs',
-        redoc_url=f'/{settings.API_DOC_PREFIX}/redoc',
-        openapi_url=f'/{settings.API_DOC_PREFIX}/openapi.json',
+        docs_url=f'/docs/swagger',
+        redoc_url=f'/docs/redoc',
+        openapi_url=f'/docs/openapi.json',
     )
     application.add_middleware(
         CORSMiddleware,
@@ -28,12 +28,11 @@ def get_application() -> FastAPI:
         allow_methods=['*'],
         allow_headers=['*'],
     )
-    application.add_middleware(
-        VKValidationMiddleware,
-        client_secret=settings.VK_CLIENT_SECRET,
-        debug=settings.DEBUG,
-        api_doc_prefix=settings.API_DOC_PREFIX,
-    )
+    if settings.CHECK_SIGN:
+        application.add_middleware(
+            VKValidationMiddleware,
+            client_secret=settings.VK_CLIENT_SECRET,
+        )
     application.add_exception_handler(
         exc_class_or_status_code=HTTPException,
         handler=http_exception_handler,
