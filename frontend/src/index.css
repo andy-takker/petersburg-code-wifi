@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: #5CC7EB;
+}
+
+.vkuiTabbarItem--selected {
+  color: var(--color-primary);
+}
+
+.leaflet-control-attribution {
+  display: none;
+}
